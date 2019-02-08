@@ -1,0 +1,134 @@
+var pageState = "Intro";
+var xPos2 = 50;
+var yPos2 = 150;
+var girl = getImage("cute/CharacterPinkGirl");
+var theEnemy = getImage("avatars/purple-pi-pink");
+var gem = getImage("cute/GemBlue");
+var gemY = (random(0,165));
+var gemX = (random(-20,320));
+var yPos = 150;
+var ySpeed = 5;
+var xPos = 200;
+var xSpeed = 5;
+var scoreEnemy = 0;
+var scoreGirl = 0;
+var tvScreen = loadImage("https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS74qR1ssLnN1ggEEFRmkynyATcjDnECZYUjDlisYDVqFqlFJQo_Q");
+
+var introScreen = function(){
+    background(mouseX,mouseY,300);
+    fill(0);
+    textSize(30);
+    textAlign(CENTER);
+    text("Click anywhere to start",200,200);
+    fill(255);
+    text("Click anywhere to start",202,200);
+    textSize(25);
+    fill(0);
+    text("Diamonds are a cartoon girl's BFF!",198,60);
+    fill(255,0,255);
+    text("Diamonds are a cartoon girl's BFF!",200,60);
+    fill(0);
+    textSize(30);
+    text("By Nina Khera",202,105);
+    fill(200,0,300);
+    text("By Nina Khera",200,105);
+    resetMatrix();
+};
+
+var changePageState = function(){
+    if (pageState === "Intro"){
+        pageState = "Main";
+    }
+};
+var goodCartoon = function(){
+    image(girl,xPos,yPos);
+    if (keyPressed && keyCode === RIGHT && xPos < 320){
+        xPos = xPos + xSpeed;
+    }
+    if (keyPressed && keyCode === LEFT && xPos > -20){
+        xPos = xPos - xSpeed;
+    }
+    if (keyPressed && keyCode === DOWN && yPos < 165){
+        yPos = yPos + ySpeed;
+    }
+    if (keyPressed && keyCode === UP && yPos > -50){
+        yPos = yPos - ySpeed;
+    }
+    
+};
+var displayScore = function(){
+    fill(255);
+    text(scoreEnemy,375,25);
+    text(scoreGirl,25,25);
+};
+var enemy = function(){
+    image(theEnemy,xPos2,yPos2);
+    if (keyPressed && key === 'w' && yPos2 > -50){
+        yPos2 = yPos2 - ySpeed;
+    }
+    if (keyPressed && key === 's' && yPos2 < 165){
+        yPos2 = yPos2 + ySpeed;
+    }
+    if (keyPressed && key === 'a' && xPos2 > -20){
+        xPos2 = xPos2 - xSpeed;
+    }
+    if (keyPressed && key === 'd' && xPos2 < 320){
+        xPos2 = xPos2 + xSpeed;
+    }
+};
+var drawBug = function(){
+    image(gem,gemX,gemY,60,60);
+};
+var enemyCatchGood = function(){
+    if(dist(xPos,yPos,xPos2,yPos2)<20){
+        xPos = random(-20,320);
+        yPos = random(0,165);
+        scoreEnemy++;
+    }
+};
+var goodCatchGem = function(){
+    if(dist(gemX,gemY,xPos,yPos)<50){
+        gemX = random(0,320);
+        gemY = random(0,165);
+        scoreGirl++;
+    }
+};
+var win = function(){
+    if(scoreEnemy >= 10) {
+        background(255,0,0);
+        fill(0,0,0);
+        textAlign(LEFT);
+        text("The Enemy wins! Girlie here's score was "+scoreGirl+".",90,200);
+        noLoop();
+    }
+    if(scoreGirl >= 10) {
+        background(0,255,0);
+        fill(0,0,0);
+        textAlign(LEFT);
+        text("Girlie here wins! The Enemy's score was "+scoreEnemy+".",90,200);
+        noLoop();
+    }
+};
+var gamePage = function(){
+image(tvScreen,0,0,400,400);
+goodCartoon();
+enemy();
+drawBug();
+displayScore();
+enemyCatchGood();
+goodCatchGem();
+win();
+};
+var mouseClicked = function(){
+    changePageState();
+};
+var draw = function(){
+switch(pageState){
+        case "Intro":
+            introScreen();
+            break;
+        case "Main":
+            gamePage();
+            break;
+    }
+};
